@@ -28,7 +28,7 @@ d.samplem['active'] = sample_metadata['Active']
 d.samplem['inactive'] = sample_metadata['Inactive']
 d.samplem['lung_disease'] = sample_metadata['Lung_Disease']
 d.samplem['mas'] = sample_metadata['MAS']
-d.samplem['real_disease'] = sample_metadata['Real_Disease']
+d.samplem['real_disease_active_ld_mas'] = sample_metadata['Real_Disease']
 d.samplem['il1_inhibition']	= sample_metadata['IL_1_inhibition']
 d.samplem['il6r_inhibition'] = sample_metadata['IL6R_inhibition']
 d.samplem['steroids'] = sample_metadata['Steriods']
@@ -77,8 +77,8 @@ for col in clinical_vars:
 	
 	# perform association test for case/ctrl status, controlling for sex as a covariate and accounting for potential batch effect
 	res = cna.tl.association(d,                   #dataset
-            d.samplem[col],                   #sample-level attribute of intest (case/control status,       #covariates to control for (in this case just one)
-            batches=None)        #batch assignments for each sample so that cna can account for batch effects
+            d.samplem[col],                   #sample-level attribute of intest 
+            batches=d.samplem.Batch)        #batch assignments for each sample so that cna can account for batch effects
 
 	print('\nglobal association p-value:', res.p)
 
@@ -89,7 +89,7 @@ for col in clinical_vars:
             scatter0={'alpha':0.5, 's':20},    #plotting parameters for neighborhoods that pass FDR
             scatter1={'alpha':0.05, 's':20})   #plotting parameters for neighborhoods that don't pass FDR
 	plt.title('p = {:.2e}'.format(res.p))
-	plt.savefig(("neighborhood_coefficient_no_batch_effects_subset_" + col + ".pdf"))
+	plt.savefig(("neighborhood_coefficient_" + col + ".pdf"))
 	plt.show()
 
 	# Global association test p-value
@@ -123,9 +123,8 @@ for col in clinical_vars:
 	d.obs['negcells'].loc[d.obs['ncorrs']<-FDR_thresh] = True
 	
 	to_export = pd.DataFrame(d.obs[['id', 'Disease_Status', 'seurat_clusters', 'Batch', 'ncorrs','poscells', 'negcells']])
-	to_export.to_csv(("neighborhood_coefficents_no_batch_" + col + ".txt"), sep='\t')
+	to_export.to_csv(("neighborhood_coefficents_" + col + ".txt"), sep='\t')
 	
-	# d.obs = d.obs.drop(labels = ['poscells','negcells','ncorrs'])
 	
 ###############################################################################################################################################################
 
