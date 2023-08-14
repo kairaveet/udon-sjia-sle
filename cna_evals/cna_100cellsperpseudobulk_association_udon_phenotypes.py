@@ -68,7 +68,7 @@ for col in clinical_vars:
             scatter0={'alpha':0.5, 's':20},    #plotting parameters for neighborhoods that pass FDR
             scatter1={'alpha':0.05, 's':20})   #plotting parameters for neighborhoods that don't pass FDR
 	plt.title('p = {:.2e}'.format(res.p))
-	plt.savefig(("neighborhood_coefficient_no_batch_effects_subset_" + col + ".pdf"))
+	plt.savefig(("neighborhood_coefficient_" + col + ".pdf"))
 	plt.show()
 
 	# Global association test p-value
